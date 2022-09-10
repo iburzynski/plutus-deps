@@ -14,7 +14,7 @@ deps_f = open('plutusDeps.json')
 data = json.load(deps_f)
 deps_f.close()
 
-common_f = open('../cabal.project.common')
+common_f = open('cabal.project.common')
 common = common_f.read() + "\n"
 common_f.close()
 
@@ -23,7 +23,7 @@ proj_f.write(f"index-state: {data['indexState']}\n")
 proj_f.write(common)
 
 if 'constraints' in data.keys():
-    constraints = f"constraints:{''.join(map(format_subdir, data['constraints']))}"
+    constraints = f"\nconstraints:{''.join(map(format_subdir, data['constraints']))}\n"
     proj_f.write(constraints)
 
 for dep in data["deps"]:
@@ -49,7 +49,8 @@ source-repository-package
   --sha256: {out["sha256"]}
 """
     proj_f.write(cabalDep)
-
 proj_f.close()
+
+print("Updating cabal.project...")
 os.remove('../cabal.project')
 os.rename('../cabal.project.temp', '../cabal.project')
